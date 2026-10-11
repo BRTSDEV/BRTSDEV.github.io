@@ -1,0 +1,843 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BRTSDEV</title>
+<meta name="description" content="Portfolio of BRTSDEV: a junior developer learning Python and C++ on the way into cyber security.">
+<meta name="theme-color" content="#0A1628">
+<meta property="og:type" content="website">
+<meta property="og:title" content="BRTSDEV">
+<meta property="og:description" content="Portfolio of BRTSDEV: a junior developer learning Python and C++ on the way into cyber security.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230A1628'/%3E%3Cpath d='M9 11l6 5-6 5M17 22h7' fill='none' stroke='%235B9BFF' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>html,body{margin:0}</style>
+<style>
+  /* Layout: a logbook that behaves like a shell. Mono labels written as paths (~/about) on a narrow left rail,
+     content on the right, one row per section. On a phone the rail stacks above the content.
+     One look by choice: deep navy with one blue accent, switchable to terminal green (a hidden mode).
+     The big moment is a live network of nodes behind the hero; the rest moves only a little. */
+  :root {
+    --bg: #0A1628;
+    --panel: #0E2038;
+    --term-bg: #050B14;
+    --fg: #E8EEF7;
+    --muted: #9FB0C8;
+    --line: #1F3556;
+    --accent: #5B9BFF;
+    --accent-soft: #12294A;
+    --accent-rgb: 91, 155, 255;
+    --accent-rgb-light: 150, 196, 255;
+    --accent-line: rgba(var(--accent-rgb), 0.55);
+    --glass: rgba(10, 22, 40, 0.72);
+    --font-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+    --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+    --header-h: 3.25rem;
+    color-scheme: dark;
+  }
+  :root[data-mode="green"] {
+    --bg: #050B08;
+    --panel: #0A1510;
+    --term-bg: #030806;
+    --fg: #DDF5E7;
+    --muted: #8DB5A0;
+    --line: #17301F;
+    --accent: #35F28A;
+    --accent-soft: #0F2A1A;
+    --accent-rgb: 53, 242, 138;
+    --accent-rgb-light: 150, 255, 200;
+    --glass: rgba(5, 11, 8, 0.72);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.6;
+    padding: 0;
+    transition: background 0.5s var(--ease);
+  }
+  .wrap { max-width: 62rem; margin-inline: auto; padding-inline: 1rem; }
+  a { color: var(--accent); text-underline-offset: 0.2em; }
+  a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+  .mono { font-family: var(--font-mono); font-size: 0.8125rem; letter-spacing: 0.04em; color: var(--muted); }
+
+  /* Header */
+  .site-header {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 20;
+    height: var(--header-h);
+    margin-bottom: calc(var(--header-h) * -1);
+    border-bottom: 1px solid transparent;
+    transition: background 0.3s var(--ease), border-color 0.3s var(--ease);
+  }
+  .site-header.scrolled {
+    background: var(--glass);
+    border-bottom-color: var(--line);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+  .site-header .wrap { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .brand { font-family: var(--font-mono); font-weight: 500; font-size: 0.875rem; letter-spacing: 0.08em; color: var(--fg); text-decoration: none; }
+  .nav { display: flex; align-items: center; gap: 1.1rem; }
+  .nav a { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .nav a:hover { color: var(--fg); }
+  .term-btn { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; padding: 0; background: transparent; border: 1px solid var(--line); border-radius: 6px; color: var(--muted); cursor: pointer; transition: color 0.2s, border-color 0.2s; }
+  .term-btn:hover { color: var(--accent); border-color: var(--accent-line); }
+  .term-btn svg { width: 1rem; height: 1rem; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .progress { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--accent); transform: scaleX(0); transform-origin: left; }
+
+  /* Hero */
+  .band { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); background: radial-gradient(48rem 24rem at 15% -5%, rgba(var(--accent-rgb), 0.14), transparent 65%); }
+  .band::after { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; background: repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.022) 0, rgba(255, 255, 255, 0.022) 1px, transparent 1px, transparent 3px); }
+  .net { position: absolute; left: 0; top: 0; pointer-events: none; -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent); mask-image: linear-gradient(to bottom, #000 55%, transparent); }
+  .hero { position: relative; z-index: 1; padding-block: calc(var(--header-h) + 3.5rem) 3.5rem; }
+  .prompt-line { margin: 0 0 1.25rem; font-family: var(--font-mono); font-size: 0.9375rem; color: var(--muted); display: flex; flex-wrap: wrap; align-items: center; }
+  .prompt-line .usr { color: var(--accent); }
+  .prompt-line .path { color: var(--fg); }
+  .prompt-line .cmd { margin-left: 0.6ch; color: var(--fg); }
+  .cursor { display: inline-block; width: 0.6ch; height: 1.05em; margin-left: 0.4ch; background: var(--accent); transform: translateY(0.12em); }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(3.25rem, 14vw, 8.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.035em;
+    margin: 0 0 1.25rem;
+    white-space: nowrap;
+    user-select: none;
+    -webkit-user-select: none;
+    text-shadow: 0 0 48px rgba(var(--accent-rgb), 0.28);
+    transition: text-shadow 0.15s;
+  }
+  h1:hover { text-shadow: 3px 0 rgba(var(--accent-rgb), 0.75), -3px 0 rgba(255, 255, 255, 0.28), 0 0 48px rgba(var(--accent-rgb), 0.28); }
+  .aka { margin: -0.25rem 0 1.25rem; color: var(--accent); }
+  .lead { font-size: clamp(1.125rem, 2.4vw, 1.4rem); line-height: 1.45; max-width: 36rem; margin: 0 0 1.75rem; text-wrap: pretty; }
+  .open { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0; padding: 0; list-style: none; }
+
+  .chip {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.2rem 0.7rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .chip.done { background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: 500; }
+  .chip.learning { border-color: var(--accent); color: var(--accent); }
+  .chip.using { background: var(--accent-soft); border-color: var(--accent-soft); color: var(--accent); }
+
+  /* Sections */
+  .row { display: grid; grid-template-columns: 10rem minmax(0, 1fr); gap: 1rem 3rem; padding-block: 2.75rem; border-bottom: 1px solid var(--line); scroll-margin-top: var(--header-h); }
+  .row > * { min-width: 0; }
+  h2 { font-family: var(--font-mono); font-weight: 500; font-size: 0.9375rem; letter-spacing: 0.02em; color: var(--accent); margin: 0.2rem 0 0; }
+  p { margin: 0 0 1rem; max-width: 40rem; text-wrap: pretty; }
+  p:last-child { margin-bottom: 0; }
+  code { font-family: var(--font-mono); font-size: 0.9em; background: var(--accent-soft); border-radius: 3px; padding: 0.05em 0.35em; }
+
+  /* Skills */
+  .skills { margin: 0; padding: 0; list-style: none; display: grid; }
+  .skills li { display: flex; align-items: center; gap: 0.9rem; padding-block: 0.7rem; border-bottom: 1px solid var(--line); }
+  .skills li:first-child { padding-top: 0; }
+  .skills li:last-child { border-bottom: 0; padding-bottom: 0; }
+  .ico { display: inline-flex; align-items: center; justify-content: center; flex: none; width: 2.5rem; height: 2.5rem; background: var(--accent-soft); border: 1px solid var(--line); border-radius: 9px; color: var(--accent); transition: transform 0.3s var(--ease), border-color 0.3s var(--ease), box-shadow 0.3s var(--ease); }
+  .ico svg { width: 1.3rem; height: 1.3rem; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .skills li:hover .ico { transform: rotate(-6deg) scale(1.08); border-color: var(--accent-line); box-shadow: 0 0 22px -6px rgba(var(--accent-rgb), 0.7); }
+  .skills .name { font-weight: 600; transition: color 0.2s; }
+  .skills li:hover .name { color: var(--accent); }
+  .skills .note { color: var(--muted); font-size: 0.9375rem; flex: 1; min-width: 0; }
+
+  .langs .name { flex: 1; }
+
+  /* Projects */
+  .projects { display: grid; gap: 1rem; }
+  .project {
+    position: relative;
+    isolation: isolate;
+    padding: 1.5rem;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    transition: transform 0.35s var(--ease), border-color 0.35s var(--ease), box-shadow 0.35s var(--ease);
+  }
+  .project::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.35s var(--ease);
+    background: radial-gradient(300px circle at var(--mx, 50%) var(--my, 0%), rgba(var(--accent-rgb), 0.17), transparent 70%);
+  }
+  .project:hover { transform: translateY(-3px); border-color: var(--accent-line); box-shadow: 0 22px 44px -26px rgba(var(--accent-rgb), 0.5); }
+  .project:hover::before { opacity: 1; }
+  .project header { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.9rem; margin-bottom: 0.6rem; }
+  h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.5rem; line-height: 1.2; letter-spacing: -0.01em; margin: 0; overflow-wrap: anywhere; }
+  .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 1rem 0 0; padding: 0; list-style: none; }
+  .tags li { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 0.1rem 0.5rem; }
+  .link { display: inline-block; margin-top: 1rem; font-weight: 500; text-decoration: none; }
+  .link::after { content: "\2192"; display: inline-block; margin-left: 0.4rem; transition: transform 0.25s var(--ease); }
+  .link:hover { text-decoration: underline; }
+  .link:hover::after { transform: translateX(5px); }
+
+  /* Log, written as shell output */
+  .shell-block { font-family: var(--font-mono); font-size: 0.875rem; }
+  .shell-block + .shell-block { margin-top: 1.5rem; }
+  .sh-cmd { margin: 0 0 0.6rem; color: var(--muted); max-width: none; }
+  .sh-cmd::before { content: "$ "; color: var(--accent); }
+  .out { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.35rem; }
+  .out li { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: 0.25rem 1rem; }
+  .out .hash { color: var(--accent); cursor: help; }
+  .out .date { color: var(--muted); }
+  .out .todo-box { color: var(--accent); }
+  .out li.todo-row { grid-template-columns: 2.5rem minmax(0, 1fr); }
+
+  /* Contact */
+  .contact { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.5rem; }
+  .contact li { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; }
+  .contact .k { font-family: var(--font-mono); font-size: 0.8125rem; color: var(--muted); width: 5.5rem; flex: none; padding-top: 0.15rem; }
+  .todo { color: var(--muted); font-style: italic; }
+
+  footer { padding-block: 2rem 3rem; color: var(--muted); font-size: 0.875rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 1.5rem; }
+  footer kbd { font-family: var(--font-mono); font-size: 0.8125rem; border: 1px solid var(--line); border-radius: 4px; padding: 0 0.4rem; color: var(--fg); }
+
+  /* Terminal */
+  .term { position: fixed; z-index: 40; left: 1rem; right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom, 0px)); max-width: 42rem; margin-inline: auto; height: min(24rem, 62vh); display: flex; flex-direction: column; background: var(--term-bg); border: 1px solid var(--accent-line); border-radius: 12px; box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.75), 0 0 40px -12px rgba(var(--accent-rgb), 0.35); overflow: hidden; }
+  .term-bar { display: flex; align-items: center; gap: 0.75rem; padding: 0.55rem 0.9rem; border-bottom: 1px solid var(--line); font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); }
+  .lights { display: inline-flex; gap: 0.35rem; }
+  .lights i { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--line); }
+  .lights i:first-child { background: var(--accent); }
+  .term-title { flex: 1; }
+  .term-x { font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.05em; text-transform: uppercase; background: transparent; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 0.1rem 0.45rem; cursor: pointer; }
+  .term-x:hover { color: var(--fg); border-color: var(--accent-line); }
+  .term-out { flex: 1; min-height: 0; overflow-y: auto; padding: 0.75rem 1rem; font-family: var(--font-mono); font-size: 0.8125rem; line-height: 1.6; }
+  .tl { white-space: pre-wrap; overflow-wrap: anywhere; color: var(--fg); }
+  .tl.cmd { color: var(--muted); }
+  .tl.dim { color: var(--muted); }
+  .tl.ok { color: var(--accent); }
+  .term-in { display: flex; align-items: center; gap: 0.6rem; padding: 0.6rem 1rem; border-top: 1px solid var(--line); }
+  .term-in label { font-family: var(--font-mono); font-size: 0.8125rem; color: var(--accent); white-space: nowrap; }
+  .term-in input { flex: 1; min-width: 0; background: transparent; border: 0; color: var(--fg); font-family: var(--font-mono); font-size: 1rem; padding: 0.2rem 0; }
+  .term-in input:focus-visible { outline: none; }
+
+  .toast { position: fixed; z-index: 60; left: 50%; bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 12px); max-width: calc(100% - 2rem); padding: 0.55rem 1rem; background: var(--term-bg); color: var(--accent); border: 1px solid var(--accent-line); border-radius: 8px; font-family: var(--font-mono); font-size: 0.8125rem; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0; pointer-events: none; transition: opacity 0.3s var(--ease), transform 0.3s var(--ease); }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+  .rain { position: fixed; inset: 0; z-index: 50; pointer-events: none; transition: opacity 0.7s; }
+
+  @media (max-width: 720px) {
+    .row { grid-template-columns: minmax(0, 1fr); gap: 0.75rem; padding-block: 2.25rem; }
+    h2 { margin-top: 0; }
+    .hero { padding-block: calc(var(--header-h) + 2.5rem) 2.75rem; }
+    .nav { gap: 0.9rem; }
+    .skills li { flex-wrap: wrap; }
+    .skills .note { flex-basis: 100%; order: 3; padding-left: 3.4rem; }
+    .skills .name { flex: 1; }
+    .project { padding: 1.25rem; }
+  }
+  @media (max-width: 480px) {
+    .nav a[href="#about"] { display: none; }
+  }
+
+  /* Motion: only when the viewer has not asked for less. Every animation ends on the normal, visible state. */
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes fade-up { from { opacity: 0.3; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+    @keyframes ring { 0% { transform: scale(1); opacity: 0.7; } 100% { transform: scale(3.2); opacity: 0; } }
+    @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+    @keyframes pop { from { opacity: 0; transform: translateY(16px) scale(0.98); } to { opacity: 1; transform: none; } }
+    .hero > * { animation: fade-up 0.8s var(--ease) both; }
+    .hero > :nth-child(2) { animation-delay: 0.08s; }
+    .hero > :nth-child(4) { animation-delay: 0.18s; }
+    .hero > :nth-child(5) { animation-delay: 0.28s; }
+    .cursor { animation: blink 1.05s steps(1) infinite; }
+    .term:not([hidden]) { animation: pop 0.28s var(--ease) both; }
+    @supports (animation-timeline: view()) {
+      @keyframes rise { from { opacity: 0.25; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+      .reveal { animation: rise linear both; animation-timeline: view(); animation-range: entry 0% entry 35%; }
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-code" viewBox="0 0 24 24"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4M13.5 6l-3 12"/></symbol>
+  <symbol id="i-chip" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="1.5"/><path d="M10 3v4M14 3v4M10 17v4M14 17v4M3 10h4M3 14h4M17 10h4M17 14h4"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 4l8 4-8 4-8-4 8-4z"/><path d="M4 12l8 4 8-4M4 16l8 4 8-4"/></symbol>
+  <symbol id="i-branch" viewBox="0 0 24 24"><circle cx="7" cy="6" r="2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="9" r="2"/><path d="M7 8v8M17 11c0 3.5-5 3.5-10 5"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><path d="M12 3.5l7 2.5v5.5c0 4.2-2.9 7.3-7 9-4.1-1.7-7-4.8-7-9V6l7-2.5z"/><circle cx="12" cy="11" r="1.6"/><path d="M12 12.6V15"/></symbol>
+  <symbol id="i-term" viewBox="0 0 24 24"><path d="M5 7l5 5-5 5M12 17h7"/></symbol>
+</svg>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="#top">BRTSDEV</a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#about">About</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+      <button class="term-btn" type="button" id="open-term" aria-label="Open terminal"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-term"/></svg></button>
+    </nav>
+  </div>
+  <div class="progress" aria-hidden="true"></div>
+</header>
+
+<div class="band" id="top">
+  <canvas class="net" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div class="hero">
+      <p class="prompt-line"><span class="usr">visitor@brtsdev</span><span>:</span><span class="path">~</span><span>$</span><span class="cmd" id="cmd">whoami</span><span class="cursor" aria-hidden="true"></span></p>
+      <h1>BRTSDEV</h1>
+      <p class="aka mono" id="aka" hidden></p>
+      <p class="lead">I'm Bartosz, 20. A junior developer in the making: I code in Python and C++, and I'm building toward a career in cyber security.</p>
+      <ul class="open" aria-label="Open to">
+        <li class="chip learning">Junior developer</li>
+        <li class="chip learning">Internships</li>
+        <li class="chip learning">Entry-level IT roles</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <main>
+    <section class="row reveal" id="about" aria-labelledby="about-title">
+      <h2 id="about-title">~/about</h2>
+      <div>
+        <p>I'm young, driven and working hard to build a better future for myself, one project at a time. I learn by building real things, then changing them on purpose to see what breaks and why.</p>
+        <p>I'm heading for a career in cyber security and plan to study it at university. Until then I'm gaining experience as a junior developer, and everything I finish goes on GitHub.</p>
+      </div>
+    </section>
+
+    <section class="row reveal" id="skills" aria-labelledby="skills-title">
+      <h2 id="skills-title">~/skills</h2>
+      <ul class="skills">
+        <li><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-code"/></svg></span><span class="name">Python</span><span class="note">Core language, tests, error handling</span><span class="chip learning">Learning</span></li>
+        <li><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chip"/></svg></span><span class="name">C++</span><span class="note">Fundamentals and how memory works</span><span class="chip learning">Learning</span></li>
+        <li><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-branch"/></svg></span><span class="name">Git &amp; GitHub</span><span class="note">Commits, remotes, merging conflicts</span><span class="chip using">Using</span></li>
+        <li><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg></span><span class="name">pytest</span><span class="note">Testing failure cases as well as the happy path</span><span class="chip using">Using</span></li>
+        <li><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-layers"/></svg></span><span class="name">C#</span><span class="note">Back-end and apps</span><span class="chip">Next</span></li>
+        <li><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-lock"/></svg></span><span class="name">Security basics</span><span class="note">Networking, Linux, common web vulnerabilities</span><span class="chip">Next</span></li>
+      </ul>
+    </section>
+
+    <section class="row reveal" id="languages" aria-labelledby="languages-title">
+      <h2 id="languages-title">~/languages</h2>
+      <ul class="skills langs">
+        <li><span class="name">Polish</span><span class="chip done">Native</span></li>
+        <li><span class="name">Dutch</span><span class="chip done">Native</span></li>
+        <li><span class="name">English</span><span class="chip using">Fluent</span></li>
+        <li><span class="name">French</span><span class="chip learning">Conversational</span></li>
+      </ul>
+    </section>
+
+    <section class="row reveal" id="projects" aria-labelledby="projects-title">
+      <h2 id="projects-title">~/projects</h2>
+      <div class="projects">
+        <article class="project">
+          <header>
+            <h3>error-handling-demo</h3>
+            <span class="chip done">Done</span>
+          </header>
+          <p>A small config loader that shows how to handle errors properly in Python: custom exception classes, specific except blocks, try/except/else/finally, exception chaining with <code>raise ... from</code>, input validation and a reusable retry decorator. It has 15 pytest tests that check the failures really happen.</p>
+          <ul class="tags"><li>Python</li><li>pytest</li><li>Logging</li></ul>
+          <a class="link" href="https://github.com/BRTSDEV/error-handling-demo" target="_blank" rel="noopener">View on GitHub</a>
+        </article>
+
+        <article class="project">
+          <header>
+            <h3>Website security header checker</h3>
+            <span class="chip">Planned</span>
+          </header>
+          <p>Takes a URL and reports which HTTP security headers are missing, with a plain explanation of each one. It will only be used on sites I own or have permission to test.</p>
+          <ul class="tags"><li>Python</li><li>requests</li><li>Flask</li></ul>
+        </article>
+
+        <article class="project">
+          <header>
+            <h3>Password strength checker</h3>
+            <span class="chip">Planned</span>
+          </header>
+          <p>Scores a password locally and checks it against known breaches without ever sending the full password anywhere.</p>
+          <ul class="tags"><li>Python</li><li>Hashing</li><li>APIs</li></ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="row reveal" id="log" aria-labelledby="log-title">
+      <h2 id="log-title">~/log</h2>
+      <div>
+        <div class="shell-block">
+          <p class="sh-cmd">git log --oneline</p>
+          <ul class="out">
+            <li><span class="hash" title="my real first commit">fddc8cc</span><span>First repository on GitHub: error-handling-demo <span class="date">(2026-10-11)</span></span></li>
+          </ul>
+        </div>
+        <div class="shell-block">
+          <p class="sh-cmd">cat TODO.md</p>
+          <ul class="out">
+            <li class="todo-row"><span class="todo-box">[ ]</span><span>Ship the security header checker and write up what I learned</span></li>
+            <li class="todo-row"><span class="todo-box">[ ]</span><span>Python certification (PCEP), then C++ basics</span></li>
+            <li class="todo-row"><span class="todo-box">[ ]</span><span>Study cyber security at university</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="row reveal" id="contact" aria-labelledby="contact-title">
+      <h2 id="contact-title">~/contact</h2>
+      <ul class="contact">
+        <li><span class="k">GitHub</span><a href="https://github.com/BRTSDEV" target="_blank" rel="noopener">github.com/BRTSDEV</a></li>
+        <li><span class="k">Email</span><span class="todo" data-todo="email">add your email address here</span></li>
+        <li><span class="k">LinkedIn</span><span class="todo" data-todo="linkedin">add your LinkedIn link here</span></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <span>&copy; 2026 BRTSDEV</span>
+    <span>hint: press <kbd>`</kbd> for a terminal</span>
+  </footer>
+</div>
+
+<div class="term" id="term" role="dialog" aria-label="Terminal" hidden>
+  <div class="term-bar">
+    <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="term-title">brtsdev &mdash; bash</span>
+    <button class="term-x" type="button" id="close-term" aria-label="Close terminal">esc</button>
+  </div>
+  <div class="term-out" id="term-out" role="log" aria-live="polite"></div>
+  <div class="term-in">
+    <label for="term-input">visitor@brtsdev:~$</label>
+    <input id="term-input" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" enterkeyhint="send" aria-label="Command">
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var root = document.documentElement;
+
+  /* ---------- Palette shared with the canvas ---------- */
+  var pal = { a: '91,155,255', b: '150,196,255' };
+  var onPalette = null;
+  function syncPalette() {
+    var cs = getComputedStyle(root);
+    var a = cs.getPropertyValue('--accent-rgb').replace(/\s/g, '');
+    var b = cs.getPropertyValue('--accent-rgb-light').replace(/\s/g, '');
+    if (a) pal.a = a;
+    if (b) pal.b = b;
+    if (onPalette) onPalette();
+  }
+  function setMode(m) {
+    if (m === 'green') root.setAttribute('data-mode', 'green'); else root.removeAttribute('data-mode');
+    syncPalette();
+  }
+
+  /* ---------- Toast ---------- */
+  var toastEl = document.getElementById('toast');
+  var toastTimer = 0;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 2400);
+  }
+
+  /* ---------- Header glass + scroll progress ---------- */
+  var header = document.querySelector('.site-header');
+  var bar = document.querySelector('.progress');
+  var ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {
+      var y = window.pageYOffset || root.scrollTop || 0;
+      var max = Math.max(1, root.scrollHeight - window.innerHeight);
+      header.classList.toggle('scrolled', y > 8);
+      bar.style.transform = 'scaleX(' + Math.min(1, y / max) + ')';
+      ticking = false;
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* ---------- Name decodes into place, then stays plain text ---------- */
+  var h1 = document.querySelector('h1');
+  var finalText = h1.textContent.trim();
+  if (!reduce) {
+    var glyphs = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%&*+';
+    var t0 = null;
+    h1.setAttribute('aria-label', finalText);
+    var decode = function (t) {
+      if (t0 === null) t0 = t;
+      var p = Math.min(1, (t - t0) / 900);
+      var locked = Math.floor(p * finalText.length * 1.15);
+      var out = '';
+      for (var i = 0; i < finalText.length; i++) {
+        out += i < locked ? finalText.charAt(i) : glyphs.charAt(Math.floor(Math.random() * glyphs.length));
+      }
+      h1.textContent = p >= 1 ? finalText : out;
+      if (p < 1) requestAnimationFrame(decode);
+    };
+    requestAnimationFrame(decode);
+  }
+
+  /* ---------- The prompt types its own command ---------- */
+  var cmdEl = document.getElementById('cmd');
+  if (!reduce) {
+    var typed = cmdEl.textContent;
+    cmdEl.textContent = '';
+    var ti = 0;
+    var typeNext = function () {
+      cmdEl.textContent = typed.slice(0, ++ti);
+      if (ti < typed.length) setTimeout(typeNext, 85);
+    };
+    setTimeout(typeNext, 450);
+  }
+
+  /* ---------- Light follows the pointer inside each project panel ---------- */
+  Array.prototype.forEach.call(document.querySelectorAll('.project'), function (el) {
+    el.addEventListener('pointermove', function (e) {
+      var r = el.getBoundingClientRect();
+      el.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      el.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    });
+  });
+
+  /* ---------- Easter egg: click the name ---------- */
+  var aka = document.getElementById('aka');
+  var akaText = 'BRTSDEV = Bartosz Developer';
+  function showAka() {
+    aka.hidden = false;
+    if (reduce) { aka.textContent = akaText; return; }
+    var i = 0;
+    aka.textContent = '';
+    (function n() {
+      aka.textContent = akaText.slice(0, ++i);
+      if (i < akaText.length) setTimeout(n, 35);
+    })();
+  }
+  var nameClicks = [];
+  h1.addEventListener('click', function () {
+    var now = Date.now();
+    nameClicks = nameClicks.filter(function (t) { return now - t < 1800; });
+    nameClicks.push(now);
+    if (nameClicks.length >= 5) {
+      nameClicks = [];
+      var wasGreen = root.getAttribute('data-mode') === 'green';
+      setMode(wasGreen ? 'blue' : 'green');
+      toast(wasGreen ? 'back to blue' : 'hacker mode on');
+      return;
+    }
+    if (aka.hidden) showAka(); else aka.hidden = true;
+  });
+
+  /* ---------- Matrix rain ---------- */
+  var raining = false;
+  function rain() {
+    toast('access granted');
+    if (reduce || raining) return;
+    raining = true;
+    var c = document.createElement('canvas');
+    c.className = 'rain';
+    document.body.appendChild(c);
+    var W = c.width = window.innerWidth, H = c.height = window.innerHeight;
+    var g = c.getContext('2d');
+    var size = 16, cols = Math.ceil(W / size), drops = [];
+    var chars = '01ABCDEF<>/{}#$%=+';
+    for (var i = 0; i < cols; i++) drops.push(Math.random() * -40);
+    var bg = getComputedStyle(root).getPropertyValue('--bg').trim() || '#0A1628';
+    var start = performance.now();
+    var done = false;
+    g.font = size + 'px "IBM Plex Mono", monospace';
+    function tick(t) {
+      if (done) return;
+      g.globalAlpha = 0.16; g.fillStyle = bg; g.fillRect(0, 0, W, H); g.globalAlpha = 1;
+      for (var k = 0; k < cols; k++) {
+        var ch = chars.charAt(Math.floor(Math.random() * chars.length));
+        var y = drops[k] * size;
+        g.fillStyle = 'rgba(' + pal.b + ',0.95)';
+        g.fillText(ch, k * size, y);
+        if (y > H && Math.random() > 0.975) drops[k] = 0;
+        drops[k] += 1;
+      }
+      if (t - start > 4200) {
+        done = true;
+        c.style.opacity = '0';
+        setTimeout(function () { if (c.parentNode) c.parentNode.removeChild(c); raining = false; }, 750);
+        return;
+      }
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  /* ---------- Terminal ---------- */
+  var term = document.getElementById('term');
+  var out = document.getElementById('term-out');
+  var input = document.getElementById('term-input');
+  var hist = [];
+  var hpos = 0;
+
+  function line(text, cls) {
+    var d = document.createElement('div');
+    d.className = 'tl' + (cls ? ' ' + cls : '');
+    d.textContent = text;
+    out.appendChild(d);
+    out.scrollTop = out.scrollHeight;
+  }
+  function show(lines, cls) { lines.forEach(function (l) { line(l, cls); }); }
+  function seq(items, gap) {
+    var i = 0;
+    (function next() {
+      if (i >= items.length) return;
+      line(items[i][0], items[i][1]);
+      i++;
+      setTimeout(next, gap);
+    })();
+  }
+  function openTerm() {
+    term.hidden = false;
+    if (!out.childNodes.length) show(['BRTSDEV shell v1.0. type "help" to see what works.'], 'dim');
+    input.focus();
+    setTimeout(function () { input.focus(); }, 80);
+  }
+  function closeTerm() { term.hidden = true; }
+
+  function run(raw) {
+    var cmd = raw.trim();
+    var low = cmd.toLowerCase().replace(/\s+/g, ' ');
+    line('visitor@brtsdev:~$ ' + cmd, 'cmd');
+    if (!low) return;
+    hist.push(cmd);
+    hpos = hist.length;
+
+    if (low === 'help') {
+      show(['commands: help  whoami  about  ls  skills  languages  projects  goals  contact  clear  exit', 'tip: a few hidden ones exist too.'], 'dim');
+    } else if (low === 'whoami') {
+      show(['bartosz // BRTSDEV (Bartosz Developer)']);
+    } else if (low === 'about') {
+      show(['20. junior developer in the making, learning by building.', 'goal: a career in cyber security.']);
+    } else if (low === 'ls') {
+      show(['about/  skills/  languages/  projects/  log/  contact/']);
+    } else if (low === 'ls -a' || low === 'ls -la' || low === 'ls -al') {
+      show(['.  ..  .secrets  about/  skills/  languages/  projects/  log/  contact/']);
+    } else if (low === 'cat .secrets') {
+      show(['nothing here. but you looked, so you would fit right in.'], 'ok');
+    } else if (low === 'skills') {
+      show(['python ........ learning', 'c++ ........... learning', 'git & github .. using', 'pytest ........ using', 'c# ............ next', 'security ...... next']);
+    } else if (low === 'languages') {
+      show(['polish ........ native', 'dutch ......... native', 'english ....... fluent', 'french ........ conversational']);
+    } else if (low === 'projects') {
+      show(['error-handling-demo ............ done', 'website security header checker  planned', 'password strength checker ....... planned']);
+    } else if (low === 'goals') {
+      show(['[1] python', '[2] c++', '[3] cyber security (university)']);
+    } else if (low === 'contact') {
+      show(['github.com/BRTSDEV']);
+    } else if (low === 'clear') {
+      out.textContent = '';
+    } else if (low === 'exit') {
+      closeTerm();
+    } else if (low === 'hack') {
+      seq([
+        ['[*] target: localhost (the only target I touch without asking)', 'dim'],
+        ['[*] scanning ports...', 'dim'],
+        ['[+] 80/tcp  open  http   (this page)', 'ok'],
+        ['[+] 443/tcp open  https  (also this page)', 'ok'],
+        ['[*] cracking... 100%', 'dim'],
+        ['[!] just kidding. I only test systems I own or have written permission to test.', 'ok']
+      ], 520);
+    } else if (low === 'sudo hire-me' || low === 'sudo hire me') {
+      seq([['[sudo] password for visitor: ********', 'dim'], ['access granted. taking you to contact...', 'ok']], 600);
+      setTimeout(function () {
+        closeTerm();
+        var c = document.getElementById('contact');
+        if (c) c.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      }, 1700);
+    } else if (low.indexOf('rm -rf') === 0) {
+      show(['permission denied. (also, this is a static page. nice try.)'], 'ok');
+    } else if (low === 'matrix') {
+      closeTerm();
+      rain();
+    } else if (low === 'theme green') {
+      setMode('green'); show(['theme: green'], 'ok');
+    } else if (low === 'theme blue') {
+      setMode('blue'); show(['theme: blue'], 'ok');
+    } else if (low.indexOf('sudo') === 0) {
+      show(['visitor is not in the sudoers file. this incident will be reported. (try: sudo hire-me)'], 'dim');
+    } else {
+      show(['command not found: ' + low.split(' ')[0] + '. try help'], 'dim');
+    }
+  }
+
+  function submitCommand() {
+    var v = input.value;
+    input.value = '';
+    run(v);
+  }
+  input.addEventListener('keydown', function (e) {
+    if ((e.key === 'Enter' || e.keyCode === 13) && !e.isComposing) {
+      e.preventDefault();
+      submitCommand();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (hpos > 0) { hpos--; input.value = hist[hpos]; }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (hpos < hist.length - 1) { hpos++; input.value = hist[hpos]; } else { hpos = hist.length; input.value = ''; }
+    }
+  });
+  document.getElementById('open-term').addEventListener('click', function () { if (term.hidden) openTerm(); else closeTerm(); });
+  document.getElementById('close-term').addEventListener('click', closeTerm);
+  term.addEventListener('pointerdown', function (e) {
+    if (e.target && e.target.id === 'close-term') return;
+    setTimeout(function () { input.focus(); }, 0);
+  });
+
+  /* ---------- Keyboard: ` toggles the terminal, Konami code runs the rain ---------- */
+  var konami = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+  var kpos = 0;
+  document.addEventListener('keydown', function (e) {
+    var tag = (e.target && e.target.tagName) || '';
+    if (e.key === 'Escape' && !term.hidden) { closeTerm(); return; }
+    if (e.key === '`') {
+      if (tag === 'TEXTAREA') return;
+      e.preventDefault();
+      if (term.hidden) openTerm(); else closeTerm();
+      return;
+    }
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+    var k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+    if (k === konami[kpos]) {
+      kpos++;
+      if (kpos === konami.length) { kpos = 0; rain(); }
+    } else {
+      kpos = (k === konami[0]) ? 1 : 0;
+    }
+  });
+
+  /* ---------- A hello for anyone who opens the developer tools ---------- */
+  try {
+    console.log(
+      '%cBRTSDEV%c  looking under the hood? good instinct.\n%cgithub.com/BRTSDEV',
+      'font:800 22px monospace;color:#5B9BFF', 'font:12px monospace;color:#9FB0C8', 'font:12px monospace;color:#5B9BFF'
+    );
+  } catch (err) { /* console not available */ }
+
+  /* ---------- Network of nodes behind the hero ---------- */
+  var canvas = document.querySelector('.net');
+  var band = document.querySelector('.band');
+  if (!canvas || !canvas.getContext) return;
+  var ctx = canvas.getContext('2d');
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var w = 0, h = 0, nodes = [], running = false, raf = 0;
+  var ptr = { x: 0, y: 0, on: false };
+  var LINK = 130, REACH = 170;
+  function rgba(rgb, a) { return 'rgba(' + rgb + ',' + a + ')'; }
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    if (ptr.on) {
+      var g = ctx.createRadialGradient(ptr.x, ptr.y, 0, ptr.x, ptr.y, 220);
+      g.addColorStop(0, rgba(pal.a, 0.16));
+      g.addColorStop(1, rgba(pal.a, 0));
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, w, h);
+    }
+    ctx.lineWidth = 1;
+    for (var i = 0; i < nodes.length; i++) {
+      var a = nodes[i];
+      for (var j = i + 1; j < nodes.length; j++) {
+        var b = nodes[j];
+        var dx = a.x - b.x, dy = a.y - b.y;
+        var d2 = dx * dx + dy * dy;
+        if (d2 < LINK * LINK) {
+          ctx.strokeStyle = rgba(pal.a, ((1 - Math.sqrt(d2) / LINK) * 0.3).toFixed(3));
+          ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+        }
+      }
+      if (ptr.on) {
+        var px = a.x - ptr.x, py = a.y - ptr.y;
+        var pd = Math.sqrt(px * px + py * py);
+        if (pd < REACH) {
+          ctx.strokeStyle = rgba(pal.b, ((1 - pd / REACH) * 0.65).toFixed(3));
+          ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(ptr.x, ptr.y); ctx.stroke();
+        }
+      }
+      ctx.fillStyle = rgba(pal.b, 0.7);
+      ctx.beginPath(); ctx.arc(a.x, a.y, a.r, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+  onPalette = function () { draw(); };
+
+  function step() {
+    if (!running) return;
+    for (var i = 0; i < nodes.length; i++) {
+      var n = nodes[i];
+      n.x += n.vx; n.y += n.vy;
+      if (n.x < 0 || n.x > w) n.vx *= -1;
+      if (n.y < 0 || n.y > h) n.vy *= -1;
+    }
+    draw();
+    raf = requestAnimationFrame(step);
+  }
+  function setRunning(on) {
+    if (on && !running && !reduce && !document.hidden) { running = true; raf = requestAnimationFrame(step); }
+    else if (!on && running) { running = false; cancelAnimationFrame(raf); }
+  }
+  function resize() {
+    var r = band.getBoundingClientRect();
+    w = Math.max(1, Math.floor(r.width));
+    h = Math.max(1, Math.floor(r.height));
+    canvas.width = Math.floor(w * dpr);
+    canvas.height = Math.floor(h * dpr);
+    canvas.style.width = w + 'px';
+    canvas.style.height = h + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var count = Math.max(22, Math.min(72, Math.round(w * h / 15000)));
+    nodes = [];
+    for (var i = 0; i < count; i++) {
+      nodes.push({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - 0.5) * 0.28, vy: (Math.random() - 0.5) * 0.28, r: Math.random() * 1.3 + 0.8 });
+    }
+    draw();
+  }
+
+  band.addEventListener('pointermove', function (e) {
+    var r = band.getBoundingClientRect();
+    ptr.x = e.clientX - r.left; ptr.y = e.clientY - r.top; ptr.on = true;
+    if (!running) draw();
+  });
+  band.addEventListener('pointerleave', function () { ptr.on = false; if (!running) draw(); });
+
+  if (window.ResizeObserver) { new ResizeObserver(resize).observe(band); } else { window.addEventListener('resize', resize); }
+  if (window.IntersectionObserver) {
+    new IntersectionObserver(function (entries) { setRunning(entries[0].isIntersecting); }).observe(band);
+  } else {
+    setRunning(true);
+  }
+  document.addEventListener('visibilitychange', function () { setRunning(!document.hidden); });
+  syncPalette();
+  resize();
+})();
+</script>
+</body>
+</html>
